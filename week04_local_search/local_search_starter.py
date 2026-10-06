@@ -75,6 +75,9 @@ def count_conflicts(board):
     """
 
     # TODO:
+    
+    
+    
     # Compare each queen with every queen
     # that comes after it.
     #
@@ -82,8 +85,20 @@ def count_conflicts(board):
     #
     #   1. in the same row
     #   2. on the same diagonal
+    
+    conflicts=0
+    #all the queens in board
+    for c1 in range(len(board)):
+        #just comapring the second queen with the 1st one
+        for c2 in range(c1+1,len(board)):
+            r1=board[c1]
+            r2=board[c2]
+            #checking if the queens are attacking eachother
+            if r1==r2 or abs(r1-r2)==abs(c1-c2):
+                #if they are conflicts is increased by 1
+                conflicts+=1
 
-    pass
+    return conflicts
 
 
 # --------------------------------------------------
@@ -105,7 +120,11 @@ def generate_neighbours(problem, board):
     # TODO:
     #
     # 1. Ask the problem for the available actions.
+    actions=problem.actions(board)
     # 2. Apply each action.
+    for action in actions:
+        neighbour=problem.result(board,action)
+        neighbours.append(neighbour)
     # 3. Add the resulting state to neighbours.
 
     return neighbours
@@ -141,6 +160,15 @@ def hill_climbing(problem, start_board):
     """
 
     current = start_board
+    
+    while True:
+        neighbours=generate_neighbours(problem<current)
+        target=min(neighbours,key=count_conflicts)
+        
+        if count_conflicts(target)>=count_conflicts(current):
+            break
+        
+        current=target
 
     # TODO
 
